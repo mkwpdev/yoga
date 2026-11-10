@@ -31,3 +31,16 @@ if (typeof Swiper !== 'undefined') {
     a11y: { prevSlideMessage: 'Previous testimonial', nextSlideMessage: 'Next testimonial' },
   });
 }
+
+// Content stays visible when reduced motion is enabled or IntersectionObserver is unavailable.
+if ('IntersectionObserver' in window && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-revealed');
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal-heading, .benefits').forEach(element => revealObserver.observe(element));
+}
